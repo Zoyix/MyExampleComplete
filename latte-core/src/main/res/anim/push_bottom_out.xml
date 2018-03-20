@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--TODO 好像并没有到50%p消失掉？ alpha 好像也没用，放慢10倍能看出来-->
+    <translate
+        android:duration="300"
+        android:fromYDelta="0"
+        android:toYDelta="50%p" />
+
+    <alpha
+        android:duration="300"
+        android:fromYDelta="1.0"
+        android:toYDelta="0.0" />
+</set>
