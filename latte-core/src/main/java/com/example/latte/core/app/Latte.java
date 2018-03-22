@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 
 /**
- * 同一的管理，所有的全局设置都在这个类里，Configurator只是它存储值的工具类，真正和用户交互是该类
+ * 统一的管理，所有的全局设置都在这个类里，Configurator只是它存储值的工具类，真正和用户交互是该类
  */
 public final class Latte {
     public static Configurator init(Context context) {
@@ -37,6 +37,8 @@ public final class Latte {
         return (Context) getConfigurations().get(ConfigKeys.APPLICATION_CONFEXT);
     }
 
+
+    //TODO 去掉所有调用的它的方法（去掉延迟）
     public static Handler getHandler() {
         return getConfiguration(ConfigKeys.HANDLER);
     }

@@ -1,4 +1,4 @@
-package com.example.latte.core.icon;
+package com.example.latte.ec.icon;
 
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconFontDescriptor;

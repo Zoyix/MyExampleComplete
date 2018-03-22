@@ -14,6 +14,11 @@ import com.example.latte.core.net.callBack.IFailure;
 import com.example.latte.core.net.callBack.ISuccess;
 import com.example.latte.core.net.rx.RxRestClient;
 import com.example.latte.core.ui.loader.LatteLoader;
+import com.example.latte.core.ui.loader.LoaderStyle;
+import com.example.latte.ec.database.DatabaseManager;
+import com.example.latte.ec.database.UserProfile;
+import com.example.latte.ec.main.EcBottomDelegate;
+import com.example.latte.ec.sign.SignUpDelegate;
 
 import java.util.WeakHashMap;
 
@@ -36,12 +41,29 @@ public class ExampleDelegate extends LatteDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-        LatteLoader.showLoading(getContext());
+        //测试Loader
+//        LatteLoader.showLoading(getContext(), LoaderStyle.PacmanIndicator);
+
+        //测试数据库
+//        final UserProfile profile = new UserProfile(123456,"aaa","aaa","aaa","aaa");
+//        DatabaseManager.getInstance().getDao().insert(profile);
+//        Toast.makeText(_mActivity, "成功", Toast.LENGTH_SHORT).show();
+
+        //登录页测试和多fragement框架测试
+//         getSupportDelegate().start(new SignUpDelegate());
+
+        //测试网络框架
+//        onCallRxRxRestClient();
+//        testRestClient();
+
+        // EcBottomDelegate测试
+         getSupportDelegate().start(new EcBottomDelegate());
+
     }
 
     private void testRestClient() {
         RestClient.builder()
-                .url("http://127.0.0.1/index")
+                .url("index.php")
                 .loader(getContext())
                 .success(new ISuccess() {
                     @Override
@@ -64,7 +86,6 @@ public class ExampleDelegate extends LatteDelegate {
                 })
                 .build()
                 .get();
-
 
     }
 

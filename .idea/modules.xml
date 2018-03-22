@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyExample.iml" filepath="$PROJECT_DIR$/MyExample.iml" />
-      <module fileurl="file://D:\Project\AndroidProject\MyProjects\MyExample\example\app.iml" filepath="D:\Project\AndroidProject\MyProjects\MyExample\example\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyExampleComplete.iml" filepath="$PROJECT_DIR$/MyExampleComplete.iml" />
       <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
       <module fileurl="file://$PROJECT_DIR$/latte-core/latte-core.iml" filepath="$PROJECT_DIR$/latte-core/latte-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/latte-ec/latte-ec.iml" filepath="$PROJECT_DIR$/latte-ec/latte-ec.iml" />
