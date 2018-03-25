@@ -24,6 +24,11 @@ android {
         }
     }
 
+    greendao {
+        schemaVersion 1//指定数据库版本号，更新操作会用到;
+//    daoPackage 'com.zhangqie.greendao.gen'//自动生成的dao的包名，包名默认是entity所在的包；
+//    targetGenDir 'src/main/java'//生成数据库文件的目录
+    }
 }
 
 dependencies {
@@ -35,4 +40,5 @@ dependencies {
     //数据库依赖   配置方式参考ButterKnife
     compile 'org.greenrobot:greendao-generator:3.2.2'
     compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
 }

@@ -17,7 +17,11 @@ import org.greenrobot.greendao.database.Database;
  * 3.底部创建返回该dao的方法
  *
  * 使用方法：（参考SignHandler类27：9）
+ * 先在Application初始化
  * DatabaseManager.getInstance().getDao()
+ *
+ * 注意：版本控制要在使用GreenDao的module的gradle文件，加入greenDao配置
+ * 我在简书上写了笔记：https://www.jianshu.com/p/ae954043f29a
  */
 public class DatabaseManager {
 

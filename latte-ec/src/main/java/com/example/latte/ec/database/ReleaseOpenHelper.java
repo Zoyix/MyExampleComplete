@@ -2,6 +2,8 @@ package com.example.latte.ec.database;
 
 import android.content.Context;
 
+import com.github.yuweiguocn.library.greendao.MigrationHelper;
+
 import org.greenrobot.greendao.database.Database;
 
 /**
@@ -22,5 +24,27 @@ public class ReleaseOpenHelper extends DaoMaster.OpenHelper {
     @Override
     public void onCreate(Database db) {
         super.onCreate(db);
+    }
+
+    /**
+     * 更新的时候被调用
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
+    @Override
+    public void onUpgrade(Database db, int oldVersion, int newVersion) {
+        //数据库更新时用
+        MigrationHelper.migrate(db, new MigrationHelper.ReCreateAllTableListener() {
+            @Override
+            public void onCreateAllTables(Database db, boolean ifNotExists) {
+                DaoMaster.createAllTables(db, ifNotExists);
+            }
+
+            @Override
+            public void onDropAllTables(Database db, boolean ifExists) {
+                DaoMaster.dropAllTables(db, ifExists);
+            }
+        },UserProfileDao.class);
     }
 }
