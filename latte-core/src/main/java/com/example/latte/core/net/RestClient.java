@@ -32,7 +32,7 @@ import retrofit2.Callback;
 public class RestClient {
 
     private final String URL;
-    private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private final WeakHashMap<String, Object> PARAMS;
     private final IRequest REQUEST;
     //TODO 为什么RxJava下载不需要下面三个？
     private final String DOWNLOAD_DIR;
@@ -62,7 +62,7 @@ public class RestClient {
                       Context context,
                       LoaderStyle loaderStyle) {
         this.URL = url;
-        PARAMS.putAll(params);
+        this.PARAMS = params;
         this.DOWNLOAD_DIR = downloadDir;
         this.EXTENSION = extension;
         this.NAME = name;
@@ -178,9 +178,8 @@ public class RestClient {
     }
 
     public final void download() {
-        new DownloadHandler(URL,REQUEST,DOWNLOAD_DIR,EXTENSION,NAME,SUCCESS,FAILURE,ERROR)
+        new DownloadHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, SUCCESS, FAILURE, ERROR)
                 .handleDownload();
     }
-
 
 }

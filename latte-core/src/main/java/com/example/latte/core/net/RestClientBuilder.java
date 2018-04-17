@@ -24,7 +24,7 @@ import okhttp3.RequestBody;
  */
 public class RestClientBuilder {
     private String mUrl = null;
-    private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private final WeakHashMap<String, Object> PARAMS = new WeakHashMap<>();
     private IRequest mIRequest = null;
     private ISuccess mISuccess = null;
     private IFailure mIFailure = null;
@@ -73,6 +73,7 @@ public class RestClientBuilder {
 
     /**
      * 下载后文件存放的目录
+     *
      * @param dir
      * @return
      */
@@ -83,6 +84,7 @@ public class RestClientBuilder {
 
     /**
      * 后缀名
+     *
      * @param extension
      * @return
      */
@@ -93,6 +95,7 @@ public class RestClientBuilder {
 
     /**
      * 传入原始数据 不知道干嘛的
+     *
      * @param raw
      * @return
      */
@@ -125,6 +128,7 @@ public class RestClientBuilder {
     /**
      * 添加指定样式的loader
      * 因为RestClient已经封装好了loader，网络请求时若要改变样式，传入就行
+     *
      * @param context
      * @return
      */
@@ -136,6 +140,7 @@ public class RestClientBuilder {
 
     /**
      * 添加默认样式的loader
+     *
      * @param context
      * @return
      */
