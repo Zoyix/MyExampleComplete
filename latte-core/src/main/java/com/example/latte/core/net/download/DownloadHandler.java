@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.example.latte.core.net.RestCreator;
 import com.example.latte.core.net.callBack.IError;
 import com.example.latte.core.net.callBack.IFailure;
+import com.example.latte.core.net.callBack.IProgress;
 import com.example.latte.core.net.callBack.IRequest;
 import com.example.latte.core.net.callBack.ISuccess;
 
@@ -22,7 +23,7 @@ import retrofit2.Response;
 
 /**
  * 下载助手类  构建出来后直接调用handleDownload方法启动下载
- *  EXTENSION和NAME传一个就行。都传用NAME。
+ * EXTENSION和NAME传一个就行。都传用NAME。
  */
 public class DownloadHandler {
 
@@ -33,6 +34,7 @@ public class DownloadHandler {
     private final String EXTENSION;
     private final String NAME;
     private final ISuccess SUCCESS;
+    private final IProgress PROGRESS;
     private final IFailure FAILURE;
     private final IError ERROR;
 
@@ -43,6 +45,7 @@ public class DownloadHandler {
                            String extension,
                            String name,
                            ISuccess success,
+                           IProgress progress,
                            IFailure failure,
                            IError error) {
         this.URL = url;
@@ -52,6 +55,7 @@ public class DownloadHandler {
         this.EXTENSION = extension;
         this.NAME = name;
         this.SUCCESS = success;
+        this.PROGRESS = progress;
         this.FAILURE = failure;
         this.ERROR = error;
     }
@@ -68,7 +72,7 @@ public class DownloadHandler {
                         if (response.isSuccessful()) {
                             final ResponseBody responseBody = response.body();
                             //@Streaming 是一边下载一边写入，所以一定要用异步方法，否则报异常。不加@Streaming可能会内存溢出
-                            final SaveFileTesk task = new SaveFileTesk(REQUEST, SUCCESS);
+                            final SaveFileTask task = new SaveFileTask(REQUEST, SUCCESS, PROGRESS);
                             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DOWNLOAD_DIR, EXTENSION, responseBody, NAME);
 
                             //这里一定要注意判断，否则文件下载不全

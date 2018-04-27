@@ -6,12 +6,14 @@ import android.os.AsyncTask;
 
 
 import com.example.latte.core.app.Latte;
+import com.example.latte.core.net.callBack.IProgress;
 import com.example.latte.core.net.callBack.IRequest;
 import com.example.latte.core.net.callBack.ISuccess;
 import com.example.latte.core.util.file.FileUtil;
+import com.example.latte.core.util.log.LatteLogger;
+
 
 import java.io.File;
-import java.io.InputStream;
 
 import okhttp3.ResponseBody;
 
@@ -23,14 +25,19 @@ import okhttp3.ResponseBody;
 /**
  * 保存文件的AsyncTask，若是APK自动启动安装
  */
-public class SaveFileTesk extends AsyncTask<Object, Void, File> {
+public class SaveFileTask extends AsyncTask<Object, Integer, File> {
+    public interface IProgressListener {
+        void onPublish(int progress);
+    }
 
     private final IRequest REQUEST;
     private final ISuccess SUCCESS;
+    private final IProgress PROGRESS;
 
-    public SaveFileTesk(IRequest REQUEST, ISuccess SUCCESS) {
+    public SaveFileTask(IRequest REQUEST, ISuccess SUCCESS, IProgress PROGRESS) {
         this.REQUEST = REQUEST;
         this.SUCCESS = SUCCESS;
+        this.PROGRESS = PROGRESS;
     }
 
     @Override
@@ -41,7 +48,8 @@ public class SaveFileTesk extends AsyncTask<Object, Void, File> {
         String extension = (String) params[1];
         final ResponseBody body = (ResponseBody) params[2];
         final String name = (String) params[3];
-        final InputStream is = body.byteStream();
+
+        LatteLogger.d("dada", "试一下");
         if (downloadDir == null || downloadDir.equals("")) {
             downloadDir = "down_loads";
         }
@@ -51,21 +59,39 @@ public class SaveFileTesk extends AsyncTask<Object, Void, File> {
         }
 
         if (name == null) {
-            return FileUtil.writeToDisk(is, downloadDir, extension.toUpperCase(), extension);
+            return FileUtil.writeToDisk(body, downloadDir, extension.toUpperCase(), extension, new IProgressListener() {
+                @Override
+                public void onPublish(int progress) {
+                    publishProgress(progress);
+                }
+            });
         } else {
-            return FileUtil.writeToDisk(is, downloadDir, name);
+            return FileUtil.writeToDisk(body, downloadDir, name, new IProgressListener() {
+                @Override
+                public void onPublish(int progress) {
+                    publishProgress(progress);
+                }
+            });
         }
 
     }
 
     @Override
+    protected void onProgressUpdate(Integer... values) {
+        int progress = values[0];
+        if (PROGRESS != null) {
+            PROGRESS.onProgress(progress);
+        }
+    }
+
+    @Override
     protected void onPostExecute(File file) {
         super.onPostExecute(file);
-        if (SUCCESS!=null){
+        if (SUCCESS != null) {
             SUCCESS.onSuccess(file.getPath());
         }
 
-        if (REQUEST!=null){
+        if (REQUEST != null) {
             REQUEST.onRequestEnd();
         }
 
@@ -74,13 +100,13 @@ public class SaveFileTesk extends AsyncTask<Object, Void, File> {
     }
 
     //自动安装apk
-    private void autoInstallApk(File file){
-        if (FileUtil.getExtension(file.getPath()).equals("apk")){
+    private void autoInstallApk(File file) {
+        if (FileUtil.getExtension(file.getPath()).equals("apk")) {
             final Intent install = new Intent();
             install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             install.setAction(Intent.ACTION_VIEW);
             //uri要换为你要打开的文件绝对路径  http://blog.csdn.net/luzhenyuxfcy/article/details/48466561
-            install.setDataAndType(Uri.fromFile(file),"application/vnd.android.package-archive");
+            install.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             Latte.getApplicationContext().startActivity(install);
         }
     }

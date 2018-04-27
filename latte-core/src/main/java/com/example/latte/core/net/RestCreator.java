@@ -20,7 +20,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RestCreator {
     /**
-     * 内部类构建好Retrofit
+     *  内部类构建好Retrofit
      */
     private static final class RetrofitHolder {
         private static final String BASE_URL = (String) Latte.getConfigurations().get(ConfigKeys.API_HOST);

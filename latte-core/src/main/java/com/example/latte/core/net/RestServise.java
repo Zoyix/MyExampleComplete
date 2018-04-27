@@ -12,6 +12,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -57,7 +58,7 @@ public interface RestServise {
     @Streaming
     @GET
     Call<ResponseBody> download(@Url String url, @QueryMap Map<String, Object> params);
-
+    
     @Multipart
     @POST
     Call<String> upload(@Url String url, @Part MultipartBody.Part file);

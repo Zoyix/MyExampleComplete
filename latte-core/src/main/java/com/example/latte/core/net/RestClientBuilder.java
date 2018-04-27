@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.example.latte.core.net.callBack.IError;
 import com.example.latte.core.net.callBack.IFailure;
+import com.example.latte.core.net.callBack.IProgress;
 import com.example.latte.core.net.callBack.IRequest;
 import com.example.latte.core.net.callBack.ISuccess;
 import com.example.latte.core.ui.loader.LoaderStyle;
@@ -27,6 +28,7 @@ public class RestClientBuilder {
     private final WeakHashMap<String, Object> PARAMS = new WeakHashMap<>();
     private IRequest mIRequest = null;
     private ISuccess mISuccess = null;
+    private IProgress mIProgress = null;
     private IFailure mIFailure = null;
     private IError mIError = null;
     private RequestBody mIBody = null;
@@ -115,6 +117,11 @@ public class RestClientBuilder {
         return this;
     }
 
+    public final RestClientBuilder progress(IProgress iProgress) {
+        this.mIProgress = iProgress;
+        return this;
+    }
+
     public final RestClientBuilder failure(IFailure iFailure) {
         this.mIFailure = iFailure;
         return this;
@@ -152,7 +159,7 @@ public class RestClientBuilder {
 
 
     public final RestClient build() {
-        return new RestClient(mUrl, PARAMS, mDownloadDir, mExtension, mName, mIRequest, mISuccess, mIFailure, mIError, mIBody, mFile, mContext, mLoaderStyle);
+        return new RestClient(mUrl, PARAMS, mDownloadDir, mExtension, mName, mIRequest, mISuccess, mIProgress,mIFailure, mIError, mIBody, mFile, mContext, mLoaderStyle);
     }
 
 

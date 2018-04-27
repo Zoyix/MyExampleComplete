@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.latte.core.net.callBack.IError;
 import com.example.latte.core.net.callBack.IFailure;
+import com.example.latte.core.net.callBack.IProgress;
 import com.example.latte.core.net.callBack.IRequest;
 import com.example.latte.core.net.callBack.ISuccess;
 import com.example.latte.core.net.callBack.RequestCallbacks;
@@ -39,6 +40,7 @@ public class RestClient {
     private final String EXTENSION;
     private final String NAME;
     private final ISuccess SUCCESS;
+    private final IProgress PROGRESS;
     private final IFailure FAILURE;
     private final IError ERROR;
     private final RequestBody BODY;
@@ -55,6 +57,7 @@ public class RestClient {
                       String name,
                       IRequest request,
                       ISuccess success,
+                      IProgress progress,
                       IFailure failure,
                       IError error,
                       RequestBody body,
@@ -68,6 +71,7 @@ public class RestClient {
         this.NAME = name;
         this.REQUEST = request;
         this.SUCCESS = success;
+        this.PROGRESS = progress;
         this.FAILURE = failure;
         this.ERROR = error;
         this.BODY = body;
@@ -178,7 +182,7 @@ public class RestClient {
     }
 
     public final void download() {
-        new DownloadHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, SUCCESS, FAILURE, ERROR)
+        new DownloadHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, SUCCESS,PROGRESS, FAILURE, ERROR)
                 .handleDownload();
     }
 
