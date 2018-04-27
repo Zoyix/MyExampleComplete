@@ -58,7 +58,10 @@ public interface RestServise {
     @Streaming
     @GET
     Call<ResponseBody> download(@Url String url, @QueryMap Map<String, Object> params);
-    
+
+    @GET
+    Call<ResponseBody> downloadWithHeader(@Header("RANGE") String range, @Url String url, @QueryMap Map<String, Object> params);
+
     @Multipart
     @POST
     Call<String> upload(@Url String url, @Part MultipartBody.Part file);

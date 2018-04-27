@@ -42,37 +42,16 @@ public class SaveFileTask extends AsyncTask<Object, Integer, File> {
 
     @Override
     protected File doInBackground(Object... params) {
-        //四个参数分别是：目录，扩展名，请求体，全名
-        //有指定了的全名就用全名
-        String downloadDir = (String) params[0];
-        String extension = (String) params[1];
-        final ResponseBody body = (ResponseBody) params[2];
-        final String name = (String) params[3];
+        //两个参数分别是：文件，请求体
+        final File file = (File) params[0];
+        final ResponseBody body = (ResponseBody) params[1];
 
-        LatteLogger.d("dada", "试一下");
-        if (downloadDir == null || downloadDir.equals("")) {
-            downloadDir = "down_loads";
-        }
-        //这里先不做处理，有需要再加（即更改extension默认值）
-        if (extension == null || extension.equals("")) {
-            extension = "";
-        }
-
-        if (name == null) {
-            return FileUtil.writeToDisk(body, downloadDir, extension.toUpperCase(), extension, new IProgressListener() {
-                @Override
-                public void onPublish(int progress) {
-                    publishProgress(progress);
-                }
-            });
-        } else {
-            return FileUtil.writeToDisk(body, downloadDir, name, new IProgressListener() {
-                @Override
-                public void onPublish(int progress) {
-                    publishProgress(progress);
-                }
-            });
-        }
+        return FileUtil.writeToDisk(body, file, new IProgressListener() {
+            @Override
+            public void onPublish(int progress) {
+                publishProgress(progress);
+            }
+        });
 
     }
 

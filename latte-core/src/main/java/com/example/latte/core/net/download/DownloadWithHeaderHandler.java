@@ -2,7 +2,6 @@ package com.example.latte.core.net.download;
 
 import android.os.AsyncTask;
 
-
 import com.example.latte.core.net.RestCreator;
 import com.example.latte.core.net.callBack.IError;
 import com.example.latte.core.net.callBack.IFailure;
@@ -12,8 +11,11 @@ import com.example.latte.core.net.callBack.ISuccess;
 import com.example.latte.core.util.file.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.WeakHashMap;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,9 +27,9 @@ import retrofit2.Response;
 
 /**
  * 下载助手类  构建出来后直接调用handleDownload方法启动下载
- * EXTENSION和NAME传一个就行。都传用NAME。
+ * 该类用作断点续传
  */
-public class DownloadHandler {
+public class DownloadWithHeaderHandler {
 
     private final String URL;
     private final WeakHashMap<String, Object> PARAMS;
@@ -38,17 +40,17 @@ public class DownloadHandler {
     private final IError ERROR;
     private final File FILE;
 
-    public DownloadHandler(String url,
-                           WeakHashMap<String, Object> params,
-                           IRequest request,
-                           String downloadDir,
-                           String extension,
-                           String name,
-                           File file,
-                           ISuccess success,
-                           IProgress progress,
-                           IFailure failure,
-                           IError error) {
+    public DownloadWithHeaderHandler(String url,
+                                     WeakHashMap<String, Object> params,
+                                     IRequest request,
+                                     String downloadDir,
+                                     String extension,
+                                     String name,
+                                     File file,
+                                     ISuccess success,
+                                     IProgress progress,
+                                     IFailure failure,
+                                     IError error) {
         this.URL = url;
         this.REQUEST = request;
         this.PARAMS = params;
@@ -82,6 +84,44 @@ public class DownloadHandler {
         }
 
         RestCreator.getRestService().download(URL, PARAMS)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            long contentLength = response.body().contentLength();
+                            long downloadedLength = 0;
+                            if (FILE.exists()) {
+                                downloadedLength = FILE.length();
+                            }
+                            if (downloadedLength >= contentLength) {
+                                //已下载的大于要下载的，删掉已下载的
+                                FILE.delete();
+                                downloadedLength = FILE.length();
+                            }
+
+                            final String range = "bytes=" + downloadedLength + "-";
+                            download(range);
+                        } else {
+                            if (ERROR != null) {
+                                ERROR.onError(response.code(), response.message());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        if (FAILURE != null) {
+                            FAILURE.onFailure();
+                        }
+                    }
+                });
+
+
+
+    }
+
+    private void download(String range) {
+        RestCreator.getRestService().downloadWithHeader(range, URL, PARAMS)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -9,6 +9,7 @@ import com.example.latte.core.net.callBack.IRequest;
 import com.example.latte.core.net.callBack.ISuccess;
 import com.example.latte.core.net.callBack.RequestCallbacks;
 import com.example.latte.core.net.download.DownloadHandler;
+import com.example.latte.core.net.download.DownloadWithHeaderHandler;
 import com.example.latte.core.ui.loader.LatteLoader;
 import com.example.latte.core.ui.loader.LoaderStyle;
 
@@ -39,13 +40,13 @@ public class RestClient {
     private final String DOWNLOAD_DIR;
     private final String EXTENSION;
     private final String NAME;
+    private final File FILE;
     private final ISuccess SUCCESS;
     private final IProgress PROGRESS;
     private final IFailure FAILURE;
     private final IError ERROR;
     private final RequestBody BODY;
     private final LoaderStyle LOADER_STYLE;
-    private final File FILE;
     //dialog要用
     private final Context CONTEXT;
 
@@ -181,8 +182,19 @@ public class RestClient {
         request(HttpMethod.UPLOAD);
     }
 
+    /**
+     * 调用download时，要么指定name 要么指定EXTENSION根据时间生成
+     */
     public final void download() {
-        new DownloadHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, SUCCESS,PROGRESS, FAILURE, ERROR)
+        new DownloadHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, FILE, SUCCESS, PROGRESS, FAILURE, ERROR)
+                .handleDownload();
+    }
+
+    /**
+     * TODO 可以解决，断点续传，为什么这样进度显示会延缓，变得似乎是下载好了，才有进度
+     */
+    public final void downloadWithHeader() {
+        new DownloadWithHeaderHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, FILE, SUCCESS, PROGRESS, FAILURE, ERROR)
                 .handleDownload();
     }
 
